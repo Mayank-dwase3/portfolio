@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basic Calculator | Mayank Dwase</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#121212;color:#eee;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.calculator{width:320px;background:#1d1d1d;border:1px solid #333;border-radius:10px;padding:20px}
+h1{font-size:22px;margin:0 0 16px;text-align:center}
+.display{width:100%;height:58px;border:0;border-radius:6px;background:#101010;color:#fff;font-size:28px;text-align:right;padding:10px;margin-bottom:14px}
+.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+button{height:52px;border:0;border-radius:6px;background:#333;color:#fff;font-size:17px;cursor:pointer}
+button:hover{background:#444}
+.equal{grid-column:span 2;background:#2563eb}
+.equal:hover{background:#1d4ed8}
+.clear{background:#555}
+.note{font-size:12px;color:#aaa;text-align:center;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="calculator">
+<h1>Basic Calculator</h1>
+<input id="display" class="display" value="0" readonly>
+<div class="buttons">
+<button class="clear" onclick="clearDisplay()">C</button>
+<button onclick="chooseOperator('/')">÷</button>
+<button onclick="chooseOperator('*')">×</button>
+<button onclick="chooseOperator('-')">−</button>
+<button onclick="appendNumber('7')">7</button>
+<button onclick="appendNumber('8')">8</button>
+<button onclick="appendNumber('9')">9</button>
+<button onclick="chooseOperator('+')">+</button>
+<button onclick="appendNumber('4')">4</button>
+<button onclick="appendNumber('5')">5</button>
+<button onclick="appendNumber('6')">6</button>
+<button onclick="deleteLast()">⌫</button>
+<button onclick="appendNumber('1')">1</button>
+<button onclick="appendNumber('2')">2</button>
+<button onclick="appendNumber('3')">3</button>
+<button class="equal" onclick="calculate()">=</button>
+<button onclick="appendNumber('0')">0</button>
+<button onclick="appendNumber('.')">.</button>
+</div>
+<p class="note">Simple calculator using HTML, CSS and JavaScript.</p>
+</div>
+<script>
+let current='0',first=null,operator=null,waiting=false;
+const display=document.getElementById('display');
+function update(){display.value=current}
+function appendNumber(num){if(waiting){current=num;waiting=false}else if(num==='.'&&current.includes('.'))return;else if(current==='0'&&num!=='.')current=num;else current+=num;update()}
+function chooseOperator(nextOperator){const inputValue=parseFloat(current);if(isNaN(inputValue))return;if(first===null){first=inputValue}else if(operator){const result=perform(first,inputValue,operator);current=String(result);first=result;update()}operator=nextOperator;waiting=true}
+function perform(a,b,op){if(op==='+')return a+b;if(op==='-')return a-b;if(op==='*')return a*b;if(op==='/')return b===0?0:a/b;return b}
+function calculate(){if(operator===null||first===null)return;const second=parseFloat(current);const result=perform(first,second,operator);current=String(Number(result.toFixed(8)));first=null;operator=null;waiting=false;update()}
+function clearDisplay(){current='0';first=null;operator=null;waiting=false;update()}
+function deleteLast(){if(waiting)return;current=current.length>1?current.slice(0,-1):'0';update()}
+update();
+</script>
+</body>
+</html>
